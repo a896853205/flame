@@ -1,0 +1,21 @@
+{
+  "name": "flame-react",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "commander": "^8.0.0",
+    "download-git-repo": "^3.0.2",
+    "inquirer": "^8.1.1"
+  },
+  "script": {
+    "tsc": "tsc"
+  },
+  "bin": {
+    "flame": "./index.js"
+  },
+  "devDependencies": {
+    "@types/inquirer": "^7.3.3",
+    "@types/node": "^16.0.0"
+  }
+}
