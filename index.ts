@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 import { program } from 'commander';
 import inquirer from 'inquirer';
 import { resolve } from 'path';
@@ -8,6 +9,7 @@ import handlebars from 'handlebars';
 import { Clone } from 'nodegit';
 
 interface Answers {
+  frameworkType: string;
   name: string;
   description: string;
   author: string;
@@ -18,6 +20,12 @@ program
   .description('初始化组件模板')
   .action(async () => {
     const answers: Answers = await inquirer.prompt([
+      {
+        name: 'frameworkType',
+        message: '请选择生成的框架',
+        type: 'list',
+        choices: ['前端(React)', '后端(Egg)'],
+      },
       {
         name: 'name',
         message: '请输入项名称',
@@ -34,10 +42,18 @@ program
 
     const spinner = ora('loading clone').start();
 
+    let cloneURL = '';
+    switch (answers.frameworkType) {
+      case '前端(React)':
+        cloneURL = 'https://gitee.com/qian-cheng-eric/flame.git';
+        break;
+      case '后端(Egg)':
+        cloneURL = 'https://gitee.com/sageren/flame-egg.git';
+        break;
+    }
     try {
-      const repository = await Clone.clone(
-        // TODO： egg https://gitee.com/sageren/flame-egg.git
-        'https://gitee.com/qian-cheng-eric/flame.git',
+      await Clone.clone(
+        cloneURL,
         resolve(`./${answers.name}`)
       );
 

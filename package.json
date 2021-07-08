@@ -2,7 +2,7 @@
   "private": false,
   "name": "1819-flame",
   "author": "eric",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "此项目为实验室1819的传承架构",
   "keyword": "1819 flame",
   "main": "index.js",

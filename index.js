@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 "use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
@@ -51,10 +52,16 @@ commander_1.program
     .command('init')
     .description('初始化组件模板')
     .action(function () { return __awaiter(void 0, void 0, void 0, function () {
-    var answers, spinner, repository, error_1, fileName, content, result;
+    var answers, spinner, cloneURL, error_1, fileName, content, result;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0: return [4 /*yield*/, inquirer_1.default.prompt([
+                    {
+                        name: 'frameworkType',
+                        message: '请选择生成的框架',
+                        type: 'list',
+                        choices: ['前端(React)', '后端(Egg)'],
+                    },
                     {
                         name: 'name',
                         message: '请输入项名称',
@@ -71,14 +78,21 @@ commander_1.program
             case 1:
                 answers = _a.sent();
                 spinner = ora_1.default('loading clone').start();
+                cloneURL = '';
+                switch (answers.frameworkType) {
+                    case '前端(React)':
+                        cloneURL = 'https://gitee.com/qian-cheng-eric/flame.git';
+                        break;
+                    case '后端(Egg)':
+                        cloneURL = 'https://gitee.com/sageren/flame-egg.git';
+                        break;
+                }
                 _a.label = 2;
             case 2:
                 _a.trys.push([2, 4, , 5]);
-                return [4 /*yield*/, nodegit_1.Clone.clone(
-                    // TODO： egg https://gitee.com/sageren/flame-egg.git
-                    'https://gitee.com/qian-cheng-eric/flame.git', path_1.resolve("./" + answers.name))];
+                return [4 /*yield*/, nodegit_1.Clone.clone(cloneURL, path_1.resolve("./" + answers.name))];
             case 3:
-                repository = _a.sent();
+                _a.sent();
                 spinner.succeed();
                 return [3 /*break*/, 5];
             case 4:
