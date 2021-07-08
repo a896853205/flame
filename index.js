@@ -41,16 +41,24 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var commander_1 = require("commander");
 var inquirer_1 = __importDefault(require("inquirer"));
+var path_1 = require("path");
+var ora_1 = __importDefault(require("ora"));
+// @ts-ignore
+var nodegit_1 = require("nodegit");
 // 比如我们想执行ds init **的命令，想出现“初始化组件模板”的描述
 // action是执行这个命令后续的回调，...args是后面**的参数
 commander_1.program
     .command('init')
     .description('初始化组件模板')
     .action(function () { return __awaiter(void 0, void 0, void 0, function () {
-    var answers;
+    var answers, spinner, repository, error_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0: return [4 /*yield*/, inquirer_1.default.prompt([
+                    {
+                        name: 'name',
+                        message: '请输入项名称',
+                    },
                     {
                         name: 'description',
                         message: '请输入项目描述',
@@ -62,8 +70,24 @@ commander_1.program
                 ])];
             case 1:
                 answers = _a.sent();
-                console.log(answers.description, answers.author);
-                return [2 /*return*/];
+                spinner = ora_1.default('loading clone').start();
+                _a.label = 2;
+            case 2:
+                _a.trys.push([2, 4, , 5]);
+                return [4 /*yield*/, nodegit_1.Clone.clone(
+                    // TODO： egg https://github.com/RenHanbin/flame-egg.git
+                    'https://gitee.com/qian-cheng-eric/flame.git#user', path_1.resolve("./" + answers.name))];
+            case 3:
+                repository = _a.sent();
+                // TODO: loading end
+                spinner.succeed();
+                return [3 /*break*/, 5];
+            case 4:
+                error_1 = _a.sent();
+                spinner.stop();
+                console.error('项目克隆失败，可能是网络原因', error_1);
+                return [3 /*break*/, 5];
+            case 5: return [2 /*return*/];
         }
     });
 }); });

@@ -5,10 +5,11 @@
   "license": "MIT",
   "dependencies": {
     "commander": "^8.0.0",
-    "download-git-repo": "^3.0.2",
-    "inquirer": "^8.1.1"
+    "inquirer": "^8.1.1",
+    "nodegit": "^0.27.0",
+    "ora": "^5.4.1"
   },
-  "script": {
+  "scripts": {
     "tsc": "tsc"
   },
   "bin": {
