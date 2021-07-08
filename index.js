@@ -43,6 +43,8 @@ var commander_1 = require("commander");
 var inquirer_1 = __importDefault(require("inquirer"));
 var path_1 = require("path");
 var ora_1 = __importDefault(require("ora"));
+var fs_1 = __importDefault(require("fs"));
+var handlebars_1 = __importDefault(require("handlebars"));
 // @ts-ignore
 var nodegit_1 = require("nodegit");
 // 比如我们想执行ds init **的命令，想出现“初始化组件模板”的描述
@@ -51,7 +53,7 @@ commander_1.program
     .command('init')
     .description('初始化组件模板')
     .action(function () { return __awaiter(void 0, void 0, void 0, function () {
-    var answers, spinner, repository, error_1;
+    var answers, spinner, repository, error_1, fileName, content, result;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0: return [4 /*yield*/, inquirer_1.default.prompt([
@@ -76,10 +78,9 @@ commander_1.program
                 _a.trys.push([2, 4, , 5]);
                 return [4 /*yield*/, nodegit_1.Clone.clone(
                     // TODO： egg https://github.com/RenHanbin/flame-egg.git
-                    'https://gitee.com/qian-cheng-eric/flame.git#user', path_1.resolve("./" + answers.name))];
+                    'https://gitee.com/qian-cheng-eric/flame.git', path_1.resolve("./" + answers.name))];
             case 3:
                 repository = _a.sent();
-                // TODO: loading end
                 spinner.succeed();
                 return [3 /*break*/, 5];
             case 4:
@@ -87,7 +88,15 @@ commander_1.program
                 spinner.stop();
                 console.error('项目克隆失败，可能是网络原因', error_1);
                 return [3 /*break*/, 5];
-            case 5: return [2 /*return*/];
+            case 5:
+                fileName = answers.name + "/package.json";
+                // 判断一下是否有这个文件
+                if (fs_1.default.existsSync(fileName)) {
+                    content = fs_1.default.readFileSync(fileName).toString();
+                    result = handlebars_1.default.compile(content)(answers);
+                    fs_1.default.writeFileSync(fileName, result);
+                }
+                return [2 /*return*/];
         }
     });
 }); });

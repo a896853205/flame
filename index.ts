@@ -2,6 +2,8 @@ import { program } from 'commander';
 import inquirer from 'inquirer';
 import { resolve } from 'path';
 import ora from 'ora';
+import fs from 'fs';
+import handlebars from 'handlebars';
 // @ts-ignore
 import { Clone } from 'nodegit';
 
@@ -10,9 +12,6 @@ interface Answers {
   description: string;
   author: string;
 }
-
-// 比如我们想执行ds init **的命令，想出现“初始化组件模板”的描述
-// action是执行这个命令后续的回调，...args是后面**的参数
 
 program
   .command('init')
@@ -33,21 +32,27 @@ program
       },
     ]);
 
-    // TODO: loading start
     const spinner = ora('loading clone').start();
 
     try {
       const repository = await Clone.clone(
-        // TODO： egg https://github.com/RenHanbin/flame-egg.git
-        'https://gitee.com/qian-cheng-eric/flame.git#user',
+        // TODO： egg https://gitee.com/sageren/flame-egg.git
+        'https://gitee.com/qian-cheng-eric/flame.git',
         resolve(`./${answers.name}`)
       );
 
-      // TODO: loading end
       spinner.succeed();
     } catch (error) {
       spinner.stop();
       console.error('项目克隆失败，可能是网络原因', error);
+    }
+
+    const fileName = `${answers.name}/package.json`;
+    // 判断一下是否有这个文件
+    if (fs.existsSync(fileName)) {
+      const content = fs.readFileSync(fileName).toString();
+      const result = handlebars.compile(content)(answers);
+      fs.writeFileSync(fileName, result);
     }
   });
 
