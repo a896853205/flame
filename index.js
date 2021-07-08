@@ -47,8 +47,6 @@ var fs_1 = __importDefault(require("fs"));
 var handlebars_1 = __importDefault(require("handlebars"));
 // @ts-ignore
 var nodegit_1 = require("nodegit");
-// 比如我们想执行ds init **的命令，想出现“初始化组件模板”的描述
-// action是执行这个命令后续的回调，...args是后面**的参数
 commander_1.program
     .command('init')
     .description('初始化组件模板')
@@ -77,7 +75,7 @@ commander_1.program
             case 2:
                 _a.trys.push([2, 4, , 5]);
                 return [4 /*yield*/, nodegit_1.Clone.clone(
-                    // TODO： egg https://github.com/RenHanbin/flame-egg.git
+                    // TODO： egg https://gitee.com/sageren/flame-egg.git
                     'https://gitee.com/qian-cheng-eric/flame.git', path_1.resolve("./" + answers.name))];
             case 3:
                 repository = _a.sent();
